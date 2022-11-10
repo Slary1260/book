@@ -2,15 +2,8 @@
  * @Author: tj
  * @Date: 2022-11-10 14:13:25
  * @LastEditors: tj
- * @LastEditTime: 2022-11-10 16:45:49
+ * @LastEditTime: 2022-11-10 16:53:45
  * @FilePath: \book\cmd\wasm\main.go
- */
-/*
- * @Author: tj
- * @Date: 2022-11-10 14:13:25
- * @LastEditors: tj
- * @LastEditTime: 2022-11-10 14:13:31
- * @FilePath: \book\main.go
  */
 package main
 
