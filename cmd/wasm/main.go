@@ -2,8 +2,8 @@
  * @Author: tj
  * @Date: 2022-11-10 14:13:25
  * @LastEditors: tj
- * @LastEditTime: 2022-11-10 16:06:04
- * @FilePath: \book\main.go
+ * @LastEditTime: 2022-11-10 16:45:49
+ * @FilePath: \book\cmd\wasm\main.go
  */
 /*
  * @Author: tj
@@ -15,8 +15,9 @@
 package main
 
 import (
-	"book/database/impl"
 	"syscall/js"
+
+	"book/database/impl"
 )
 
 func main() {
@@ -25,8 +26,8 @@ func main() {
 		panic(err)
 	}
 
-	done := make(chan int, 0)
 	js.Global().Set("setData", js.FuncOf(m.SetData))
 	js.Global().Set("readData", js.FuncOf(m.ReadData))
-	<-done
+
+	<-make(chan bool)
 }
