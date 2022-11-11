@@ -2,7 +2,7 @@
  * @Author: tj
  * @Date: 2022-11-10 14:59:28
  * @LastEditors: tj
- * @LastEditTime: 2022-11-11 13:59:32
+ * @LastEditTime: 2022-11-11 15:12:24
  * @FilePath: \book\database\impl\read.go
  */
 package impl
@@ -18,6 +18,7 @@ import (
 	"github.com/tidwall/buntdb"
 )
 
+// TODO this is demo
 func (m *MemoryDb) ReadData(this js.Value, args []js.Value) interface{} {
 	// if len(args) != 1 {
 	// 	return os.ErrInvalid.Error()

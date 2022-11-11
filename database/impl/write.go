@@ -2,7 +2,7 @@
  * @Author: tj
  * @Date: 2022-11-10 14:59:19
  * @LastEditors: tj
- * @LastEditTime: 2022-11-11 15:08:03
+ * @LastEditTime: 2022-11-11 15:46:16
  * @FilePath: \book\database\impl\write.go
  */
 package impl
@@ -16,13 +16,14 @@ import (
 	"github.com/tidwall/buntdb"
 )
 
-// 现在数据
+// 设置数据
 // key,value,过期毫秒数
 func (m *MemoryDb) SetData(this js.Value, args []js.Value) interface{} {
 	// if len(args) != 3 {
 	// 	return os.ErrInvalid.Error()
 	// }
 
+	// TODO this is demo
 	// err := m.db.CreateIndex("last_name", "*", buntdb.IndexJSON("name.last"))
 	// if err != nil {
 	// 	return js.ValueOf(err.Error())
@@ -58,6 +59,7 @@ func (m *MemoryDb) SetData(this js.Value, args []js.Value) interface{} {
 		fmt.Println("replaced:", replaced)
 		fmt.Println("previousValue:", previousValue)
 
+		// TODO this is demo
 		tx.Set("1", `{"name":{"first":"Tom","last":"Johnson"},"age":38}`, nil)
 		tx.Set("2", `{"name":{"first":"Janet","last":"Prichard"},"age":47}`, nil)
 		tx.Set("3", `{"name":{"first":"Carol","last":"Anderson"},"age":52}`, nil)
@@ -104,6 +106,7 @@ func (m *MemoryDb) DeleteKeyByPattern(this js.Value, args []js.Value) interface{
 	delkeys := make([]string, 0, 4)
 	err := m.db.Update(func(tx *buntdb.Tx) error {
 		tx.AscendKeys(pattern, func(k, v string) bool {
+			// TODO 过滤条件
 			if m.someCondition(args[1].String(), args[2].String(), k, v) == true {
 				delkeys = append(delkeys, k)
 			}
