@@ -2,7 +2,7 @@
  * @Author: tj
  * @Date: 2022-11-10 17:51:30
  * @LastEditors: tj
- * @LastEditTime: 2022-11-10 18:02:24
+ * @LastEditTime: 2022-11-11 14:13:38
  * @FilePath: \book\database\impl\index.go
  */
 package impl
@@ -31,6 +31,7 @@ func (m *MemoryDb) AddIndex(this js.Value, args []js.Value) interface{} {
 
 	m.mutex.Lock()
 	m.indexMap[args[0].String()] = buntdb.IndexString
+	m.patternMap[args[0].String()] = args[1].String()
 	m.mutex.Unlock()
 
 	return js.ValueOf("")
@@ -50,6 +51,27 @@ func (m *MemoryDb) ReplaceIndex(this js.Value, args []js.Value) interface{} {
 
 	m.mutex.Lock()
 	m.indexMap[args[0].String()] = buntdb.IndexString
+	delete(m.patternMap, args[0].String())
+	m.patternMap[args[0].String()] = args[1].String()
+	m.mutex.Unlock()
+
+	return js.ValueOf("")
+}
+
+func (m *MemoryDb) DeleteIndex(this js.Value, args []js.Value) interface{} {
+	// if len(args) != 1 {
+	// 	return os.ErrInvalid.Error()
+	// }
+
+	err := m.db.DropIndex(args[0].String())
+	if err != nil {
+		fmt.Println("DeleteIndex error:", err.Error())
+		return err.Error()
+	}
+
+	m.mutex.Lock()
+	delete(m.indexMap, args[0].String())
+	delete(m.patternMap, args[0].String())
 	m.mutex.Unlock()
 
 	return js.ValueOf("")

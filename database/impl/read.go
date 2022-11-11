@@ -2,7 +2,7 @@
  * @Author: tj
  * @Date: 2022-11-10 14:59:28
  * @LastEditors: tj
- * @LastEditTime: 2022-11-10 17:58:10
+ * @LastEditTime: 2022-11-11 13:59:32
  * @FilePath: \book\database\impl\read.go
  */
 package impl
@@ -10,6 +10,7 @@ package impl
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 	"syscall/js"
 
@@ -98,7 +99,42 @@ func (m *MemoryDb) ReadData(this js.Value, args []js.Value) interface{} {
 		ret = append(ret, "******************")
 
 		fmt.Println("indexs")
-		indexs, _ := tx.Indexes()
+		indexs, err := tx.Indexes()
+		if err != nil {
+			fmt.Println("Indexes error:", err.Error())
+		}
+		fmt.Println("indexs:", strings.Join(indexs, ","))
+		ret = append(ret, indexs...)
+		ret = append(ret, "******************")
+
+		fmt.Println("Order by address")
+		datail = make([]string, 0)
+		tx.Ascend("address", func(key, value string) bool {
+			fmt.Printf("%s: %s\n", key, value)
+			datail = append(datail, value)
+			return true
+		})
+		ret = append(ret, datail...)
+		ret = append(ret, "******************")
+
+		fmt.Println("get key of address:28")
+		tx.AscendKeys("*", func(k, v string) bool {
+			fmt.Println("k:", k)
+			fmt.Println("v:", v)
+			if strings.Contains(v, strconv.Itoa(28)) {
+				fmt.Println("Contains k:", k)
+				ret = append(ret, k)
+			}
+			return true
+		})
+		ret = append(ret, "******************")
+
+		fmt.Println("indexs")
+		indexs, err = tx.Indexes()
+		if err != nil {
+			fmt.Println("Indexes last error:", err.Error())
+		}
+		fmt.Println("last indexs:", strings.Join(indexs, ","))
 		ret = append(ret, indexs...)
 		ret = append(ret, "******************")
 

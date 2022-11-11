@@ -2,7 +2,7 @@
  * @Author: tj
  * @Date: 2022-11-10 14:41:14
  * @LastEditors: tj
- * @LastEditTime: 2022-11-10 17:53:09
+ * @LastEditTime: 2022-11-11 14:06:50
  * @FilePath: \book\database\impl\impl.go
  */
 package impl
@@ -24,7 +24,8 @@ type MemoryDb struct {
 
 	mutex sync.RWMutex
 	// 没有创建索引是查询不到数据的
-	indexMap map[string]func(a, b string) bool // 索引key -> 索引函数
+	indexMap   map[string]func(a, b string) bool // 索引key -> 索引函数
+	patternMap map[string]string                 // 索引key->索引模型 pattern
 }
 
 func GetMemoryDb() (*MemoryDb, error) {
