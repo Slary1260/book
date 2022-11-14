@@ -2,7 +2,7 @@
  * @Author: tj
  * @Date: 2022-11-10 14:59:19
  * @LastEditors: tj
- * @LastEditTime: 2022-11-11 15:46:16
+ * @LastEditTime: 2022-11-14 10:34:59
  * @FilePath: \book\database\impl\write.go
  */
 package impl
@@ -24,20 +24,38 @@ func (m *MemoryDb) SetData(this js.Value, args []js.Value) interface{} {
 	// }
 
 	// TODO this is demo
-	// err := m.db.CreateIndex("last_name", "*", buntdb.IndexJSON("name.last"))
-	// if err != nil {
-	// 	return js.ValueOf(err.Error())
-	// }
+	if len(args) == 0 {
+		err := m.db.CreateIndex("last_name", "*", buntdb.IndexJSON("name.last"))
+		if err != nil {
+			return js.ValueOf(err.Error())
+		}
 
-	// err = m.db.CreateIndex("age", "*", buntdb.IndexJSON("age"))
-	// if err != nil {
-	// 	return js.ValueOf(err.Error())
-	// }
+		err = m.db.CreateIndex("age", "*", buntdb.IndexJSON("age"))
+		if err != nil {
+			return js.ValueOf(err.Error())
+		}
 
-	// err = m.db.CreateIndex("address", "*", buntdb.IndexString)
-	// if err != nil {
-	// 	return js.ValueOf(err.Error())
-	// }
+		err = m.db.CreateIndex("address", "*", buntdb.IndexString)
+		if err != nil {
+			return js.ValueOf(err.Error())
+		}
+
+		err = m.db.Update(func(tx *buntdb.Tx) error {
+			tx.Set("1", `{"name":{"first":"Tom","last":"Johnson"},"age":38}`, nil)
+			tx.Set("2", `{"name":{"first":"Janet","last":"Prichard"},"age":47}`, nil)
+			tx.Set("3", `{"name":{"first":"Carol","last":"Anderson"},"age":52}`, nil)
+			tx.Set("4", `{"name":{"first":"Alan","last":"Cooper"},"age":28}`, nil)
+			tx.Set("5", `"address":28`, nil)
+			tx.Set("6", `"address":15`, nil)
+			return nil
+		})
+		if err != nil {
+			fmt.Println("SetData Update error:", err.Error())
+			return js.ValueOf(err.Error())
+		}
+
+		return js.ValueOf("")
+	}
 
 	opts := &buntdb.SetOptions{}
 	if args[2].String() != "" {
@@ -59,13 +77,6 @@ func (m *MemoryDb) SetData(this js.Value, args []js.Value) interface{} {
 		fmt.Println("replaced:", replaced)
 		fmt.Println("previousValue:", previousValue)
 
-		// TODO this is demo
-		tx.Set("1", `{"name":{"first":"Tom","last":"Johnson"},"age":38}`, nil)
-		tx.Set("2", `{"name":{"first":"Janet","last":"Prichard"},"age":47}`, nil)
-		tx.Set("3", `{"name":{"first":"Carol","last":"Anderson"},"age":52}`, nil)
-		tx.Set("4", `{"name":{"first":"Alan","last":"Cooper"},"age":28}`, nil)
-		tx.Set("5", `"address":28`, nil)
-		tx.Set("6", `"address":15`, nil)
 		return nil
 	})
 	if err != nil {
